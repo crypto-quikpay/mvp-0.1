@@ -2,9 +2,10 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-function App() {
-  const connectWallet = () => {
-    alert('Connect to Wallet clicked! (Wallet connection logic will go here)');
+function App({onboard}) {
+  const connectWallet = async() => {
+    const wallets = await onboard.connectWallet();
+    console.log(wallets);
   };
 
   return (
