@@ -4,12 +4,12 @@
 <br>
 
 ### Core functionality 
-- [ ] Setup basic config.
-- [ ] A simple webpage to connect wallet (Metamask).
+- [x] Setup basic config.
+- [x] A simple webpage to connect a wallet (Metamask).
 
 ### Integration + UI
-- [ ] Integrate with wallet, i.e. Metamask.
-- [ ] Display basic user information (e.g., wallet address, balance, etc).
+- [x] Integrate with wallet, i.e. Metamask.
+- [x] Display basic user information (e.g., wallet address, balance, etc).
 
 ### CQP Implementation
 - [ ] Create a basic tx initiation functionality.
