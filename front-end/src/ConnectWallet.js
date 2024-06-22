@@ -13,7 +13,7 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
         balance: wallet.accounts[0].balance,
         ens: { name, avatar }
       });
-      setWallet(wallet);  // Setting wallet for DisplayWalletInfo component
+      setWallet(wallet); // Setting wallet for DisplayWalletInfo component
     }
   }, [wallet, setAccount, setWallet]);
 
@@ -24,7 +24,7 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
   }, [wallet, setEthersProvider]);
 
   return (
-    <div>
+    <div className="mb-4">
       {wallet ? (
         <button onClick={() => disconnect({ label: wallet.label })} className="btn btn-danger">
           Disconnect
