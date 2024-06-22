@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Onboard, {chains} from '@web3-onboard/core'
+import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
 
-const INFURA_ID = 'f398c224e20846ec9295c637c7e489c9'; 
+const INFURA_ID = 'YOUR_INFURA_ID'; // Replace with your actual Infura Project ID
 
 const injected = injectedModule();
 const wallets = [injected];
 
-const chainsList = [
+const chains = [
   {
     id: '0xaa36a7',
     token: 'ETH',
@@ -19,19 +19,20 @@ const chainsList = [
   }
 ];
 
-const onboardInstance = Onboard({
+const appMetadata = {
+  name: 'Crypto QuikPay',
+  description: 'Seamless Crypto Transactions at Your Fingertips',
+};
+
+init({
   wallets,
-  chains: chainsList,
-  appMetadata: {
-    name: 'Crypto QuikPay',
-   // icon: '<svg><svg/>', // You can replace this with your app's icon SVG or remove this line
-    description: 'Seamless Crypto Transactions at Your Fingertips'
-  }
+  chains,
+  appMetadata
 });
 
 ReactDOM.render(
   <React.StrictMode>
-    <App onboard={onboardInstance}/>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
