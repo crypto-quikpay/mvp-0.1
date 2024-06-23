@@ -11,6 +11,12 @@ export default function DisplayWalletInfo({ account, wallet }) {
         {account.ens?.avatar ? <img src={account.ens?.avatar} alt="ENS Avatar" className="ens-avatar" /> : null}
         <h5 className="card-title">{account.ens?.name ? account.ens.name : account.address}</h5>
         <p className="card-text">Connected to {wallet.label}</p>
+        {account.balance !== null && (
+          <div>
+            <h6>Balance:</h6>
+            <p>{account.balance} {account.network}</p>
+          </div>
+        )}
       </div>
     </div>
   );

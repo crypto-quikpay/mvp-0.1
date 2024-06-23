@@ -39,6 +39,7 @@ export default function App() {
           All of this is abstracted from users, and done in a seamless yet elegant way.
         </p>
       </div>
+      <p className="mb-4">Seamless Crypto Transactions at Your Fingertips</p>
       <ConnectWallet setEthersProvider={setEthersProvider} setAccount={setAccount} setWallet={setWallet} />
       <DisplayWalletInfo account={account} wallet={wallet} />
     </div>
