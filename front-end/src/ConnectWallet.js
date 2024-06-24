@@ -4,10 +4,11 @@ import { ethers } from 'ethers';
 
 export default function ConnectWallet({ setEthersProvider, setAccount, setWallet }) {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const [toAddress, setToAddress] = useState('');
+  const [amount, setAmount] = useState('');
 
   useEffect(() => {
     if (wallet?.provider) {
-      console.log('wallet object:', wallet); // Debugging line
       const { name, avatar } = wallet?.accounts[0].ens ?? {};
       const account = {
         address: wallet.accounts[0].address,
@@ -46,12 +47,50 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
     }
   }, [wallet, setEthersProvider]);
 
+  const handleSendTransaction = async () => {
+    if (!wallet?.provider || !toAddress || !amount) return;
+
+    const ethersProvider = new ethers.BrowserProvider(wallet.provider, 'any');
+    const signer = ethersProvider.getSigner();
+
+    try {
+      const txResponse = await signer.sendTransaction({
+        to: toAddress,
+        value: ethers.parseEther(amount)
+      });
+      console.log('Transaction Response:', txResponse);
+    } catch (error) {
+      console.error('Transaction Error:', error);
+    }
+  };
+
   return (
     <div className="mb-4">
       {wallet ? (
-        <button onClick={() => disconnect({ label: wallet.label })} className="btn btn-danger">
-          Disconnect
-        </button>
+        <>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Recipient Address"
+              value={toAddress}
+              onChange={(e) => setToAddress(e.target.value)}
+              className="form-control mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Amount (ETH)"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="form-control mb-2"
+            />
+            <button onClick={handleSendTransaction} className="btn btn-success mb-2">
+              Send Transaction
+            </button>
+          </div>
+          <button onClick={() => disconnect({ label: wallet.label })} className="btn btn-danger">
+            Disconnect
+          </button>
+        </>
       ) : (
         <button disabled={connecting} onClick={() => connect()} className="btn btn-primary">
           Connect

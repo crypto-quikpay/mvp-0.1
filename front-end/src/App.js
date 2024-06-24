@@ -41,7 +41,7 @@ export default function App() {
       </div>
       <p className="mb-4">Seamless Crypto Transactions at Your Fingertips</p>
       <ConnectWallet setEthersProvider={setEthersProvider} setAccount={setAccount} setWallet={setWallet} />
-      <DisplayWalletInfo account={account} wallet={wallet} />
+      <DisplayWalletInfo account={account} wallet={wallet} ethersProvider={ethersProvider} />
     </div>
   );
 }
