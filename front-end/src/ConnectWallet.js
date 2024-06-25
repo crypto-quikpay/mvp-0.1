@@ -12,28 +12,25 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
       const { name, avatar } = wallet?.accounts[0].ens ?? {};
       const account = {
         address: wallet.accounts[0].address,
-        balance: null, // Initializing balance as null
+        balance: null,
         ens: { name, avatar }
       };
       setAccount(account);
       setWallet(wallet);
 
-      // Network name mapping
       const networkNames = {
-        '0xaa36a7': 'Sepolia ETH', // Ensure the key is a string
+        '0xaa36a7': 'Sepolia ETH',
       };
 
-      // Fetch ETH balance for the connected account
       const fetchBalances = async () => {
         const provider = new ethers.BrowserProvider(wallet.provider, 'any');
         const balance = await provider.getBalance(account.address);
         const chainId = wallet.chains?.[0]?.id || wallet.chainId || 'Unknown Network';
-        console.log('chainId:', chainId); // Debugging line
         const networkName = networkNames[chainId.toString()] || 'Unknown Network';
         setAccount((prevAccount) => ({
           ...prevAccount,
           balance: ethers.formatEther(balance),
-          network: networkName, // Add network name to account object
+          network: networkName,
         }));
       };
 
@@ -51,14 +48,23 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
     if (!wallet?.provider || !toAddress || !amount) return;
 
     const ethersProvider = new ethers.BrowserProvider(wallet.provider, 'any');
-    const signer = ethersProvider.getSigner();
+    const signer = await ethersProvider.getSigner();
 
     try {
+      const balance = await ethersProvider.getBalance(await signer.getAddress());
+      const value = ethers.parseEther(amount);
+      if (balance < value) {  // Comparison between bigints
+        console.error('Insufficient balance');
+        return;
+      }
+
       const txResponse = await signer.sendTransaction({
         to: toAddress,
-        value: ethers.parseEther(amount)
+        value: value
       });
-      console.log('Transaction Response:', txResponse);
+
+      const receipt = await txResponse.wait();
+      console.log('Transaction Receipt:', receipt);
     } catch (error) {
       console.error('Transaction Error:', error);
     }

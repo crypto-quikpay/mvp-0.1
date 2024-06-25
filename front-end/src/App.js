@@ -7,7 +7,7 @@ export default function App() {
   const [ethersProvider, setEthersProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [wallet, setWallet] = useState(null);
-  const [darkMode, setDarkMode] = useState(true); // Turn on dark mode by default
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     document.body.className = darkMode ? 'dark-mode' : '';
@@ -18,7 +18,7 @@ export default function App() {
   return (
     <div className="container text-center mt-5">
       <div className="d-flex justify-content-between mb-3">
-        <div></div> {/* Empty div to push the toggle to the right */}
+        <div></div>
         <div className="form-check form-switch">
           <input
             className="form-check-input"
@@ -41,7 +41,7 @@ export default function App() {
       </div>
       <p className="mb-4">Seamless Crypto Transactions at Your Fingertips</p>
       <ConnectWallet setEthersProvider={setEthersProvider} setAccount={setAccount} setWallet={setWallet} />
-      <DisplayWalletInfo account={account} wallet={wallet} ethersProvider={ethersProvider} />
+      <DisplayWalletInfo account={account} wallet={wallet} />
     </div>
   );
 }
