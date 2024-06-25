@@ -27,3 +27,4 @@ yarn-error.log*
 
 # private
 .env
+.vscode
