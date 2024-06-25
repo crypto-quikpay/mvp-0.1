@@ -2,33 +2,44 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ConnectWallet from './ConnectWallet';
 import DisplayWalletInfo from './DisplayWalletInfo';
-import TransactionStatus from './TransactionStatus'; // New import for transaction status
+import SendTokens from './SendTokens';
+import SwapTokens from './SwapTokens';
+import TransactionStatus from './TransactionStatus';
 
 export default function App() {
   const [ethersProvider, setEthersProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [wallet, setWallet] = useState(null);
-  const [darkMode, setDarkMode] = useState(true); // Turn on dark mode by default
-  const [transactionStatus, setTransactionStatus] = useState(null); // State for transaction status
-  const [transactionReceipt, setTransactionReceipt] = useState(null); // State for transaction receipt
+  const [transactionStatus, setTransactionStatus] = useState('');
+  const [transactionReceipt, setTransactionReceipt] = useState(null);
+  const [showSendTokens, setShowSendTokens] = useState(false);
+  const [showSwapTokens, setShowSwapTokens] = useState(false);
 
   useEffect(() => {
-    document.body.className = darkMode ? 'dark-mode' : '';
-  }, [darkMode]);
+    document.body.className = 'dark-mode';
+  }, []);
 
-  const toggleDarkMode = () => setDarkMode(!darkMode);
+  const toggleSendTokens = () => {
+    setShowSendTokens(true);
+    setShowSwapTokens(false);
+  };
+
+  const toggleSwapTokens = () => {
+    setShowSendTokens(false);
+    setShowSwapTokens(true);
+  };
 
   return (
     <div className="container text-center mt-5">
       <div className="d-flex justify-content-between mb-3">
-        <div></div> {/* Empty div to push the toggle to the right */}
+        <div></div>
         <div className="form-check form-switch">
           <input
             className="form-check-input"
             type="checkbox"
             id="darkModeSwitch"
-            checked={darkMode}
-            onChange={toggleDarkMode}
+            checked={true}
+            readOnly
           />
           <label className="form-check-label" htmlFor="darkModeSwitch">
             Dark Mode
@@ -43,15 +54,21 @@ export default function App() {
         </p>
       </div>
       <p className="mb-4">Seamless Crypto Transactions at Your Fingertips</p>
-      <ConnectWallet
-        setEthersProvider={setEthersProvider}
-        setAccount={setAccount}
-        setWallet={setWallet}
-        setTransactionStatus={setTransactionStatus} // Pass setTransactionStatus to ConnectWallet
-        setTransactionReceipt={setTransactionReceipt} // Pass setTransactionReceipt to ConnectWallet
-      />
-      <DisplayWalletInfo account={account} wallet={wallet} />
-      <TransactionStatus status={transactionStatus} receipt={transactionReceipt} /> {/* Add TransactionStatus component */}
+      <ConnectWallet setEthersProvider={setEthersProvider} setAccount={setAccount} setWallet={setWallet} setTransactionStatus={setTransactionStatus} setTransactionReceipt={setTransactionReceipt} />
+      <DisplayWalletInfo account={account} wallet={wallet} ethersProvider={ethersProvider} />
+      {wallet && (
+        <div className="d-flex justify-content-center mb-3">
+          <button onClick={toggleSendTokens} className="btn btn-success me-2">
+            Send Tokens
+          </button>
+          <button onClick={toggleSwapTokens} className="btn btn-warning">
+            Swap Tokens
+          </button>
+        </div>
+      )}
+      {showSendTokens && <SendTokens ethersProvider={ethersProvider} setTransactionStatus={setTransactionStatus} setTransactionReceipt={setTransactionReceipt} />}
+      {showSwapTokens && <SwapTokens ethersProvider={ethersProvider} setTransactionStatus={setTransactionStatus} setTransactionReceipt={setTransactionReceipt} />}
+      <TransactionStatus status={transactionStatus} receipt={transactionReceipt} />
     </div>
   );
 }

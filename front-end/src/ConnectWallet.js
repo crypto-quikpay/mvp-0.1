@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 
-export default function ConnectWallet({ setEthersProvider, setAccount, setWallet, setTransactionStatus, setTransactionReceipt }) {
+export default function ConnectWallet({ setEthersProvider, setAccount, setWallet }) {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
-  const [toAddress, setToAddress] = useState('');
-  const [amount, setAmount] = useState('');
 
   useEffect(() => {
     if (wallet?.provider) {
@@ -44,65 +42,10 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
     }
   }, [wallet, setEthersProvider]);
 
-  const handleSendTransaction = async () => {
-    if (!wallet?.provider || !toAddress || !amount) return;
-
-    const ethersProvider = new ethers.BrowserProvider(wallet.provider, 'any');
-    const signer = await ethersProvider.getSigner();
-
-    try {
-      const balance = await ethersProvider.getBalance(await signer.getAddress());
-      const value = ethers.parseEther(amount);
-      if (balance < value) {
-        console.error('Insufficient balance');
-        return;
-      }
-
-      setTransactionStatus('Transaction in progress...');
-
-      const txResponse = await signer.sendTransaction({
-        to: toAddress,
-        value: value
-      });
-
-      setTransactionStatus('Waiting for confirmation...');
-
-      const receipt = await txResponse.wait();
-      setTransactionReceipt({
-        ...receipt,
-        value: value // Set the value in the receipt
-      });
-
-      setTransactionStatus('Transaction completed');
-    } catch (error) {
-      console.error('Transaction Error:', error);
-      setTransactionStatus('Transaction failed');
-    }
-  };
-
   return (
     <div className="mb-4">
       {wallet ? (
         <>
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Recipient Address"
-              value={toAddress}
-              onChange={(e) => setToAddress(e.target.value)}
-              className="form-control mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Amount (ETH)"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="form-control mb-2"
-            />
-            <button onClick={handleSendTransaction} className="btn btn-success mb-2">
-              Send Transaction
-            </button>
-          </div>
           <button onClick={() => disconnect({ label: wallet.label })} className="btn btn-danger">
             Disconnect
           </button>
