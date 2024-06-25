@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useConnectWallet } from '@web3-onboard/react';
 import { ethers } from 'ethers';
 
-export default function ConnectWallet({ setEthersProvider, setAccount, setWallet }) {
+export default function ConnectWallet({ setEthersProvider, setAccount, setWallet, setTransactionStatus, setTransactionReceipt }) {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
@@ -53,20 +53,30 @@ export default function ConnectWallet({ setEthersProvider, setAccount, setWallet
     try {
       const balance = await ethersProvider.getBalance(await signer.getAddress());
       const value = ethers.parseEther(amount);
-      if (balance < value) {  // Comparison between bigints
+      if (balance < value) {
         console.error('Insufficient balance');
         return;
       }
+
+      setTransactionStatus('Transaction in progress...');
 
       const txResponse = await signer.sendTransaction({
         to: toAddress,
         value: value
       });
 
+      setTransactionStatus('Waiting for confirmation...');
+
       const receipt = await txResponse.wait();
-      console.log('Transaction Receipt:', receipt);
+      setTransactionReceipt({
+        ...receipt,
+        value: value // Set the value in the receipt
+      });
+
+      setTransactionStatus('Transaction completed');
     } catch (error) {
       console.error('Transaction Error:', error);
+      setTransactionStatus('Transaction failed');
     }
   };
 

@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ConnectWallet from './ConnectWallet';
 import DisplayWalletInfo from './DisplayWalletInfo';
+import TransactionStatus from './TransactionStatus'; // New import for transaction status
 
 export default function App() {
   const [ethersProvider, setEthersProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [wallet, setWallet] = useState(null);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(true); // Turn on dark mode by default
+  const [transactionStatus, setTransactionStatus] = useState(null); // State for transaction status
+  const [transactionReceipt, setTransactionReceipt] = useState(null); // State for transaction receipt
 
   useEffect(() => {
     document.body.className = darkMode ? 'dark-mode' : '';
@@ -18,7 +21,7 @@ export default function App() {
   return (
     <div className="container text-center mt-5">
       <div className="d-flex justify-content-between mb-3">
-        <div></div>
+        <div></div> {/* Empty div to push the toggle to the right */}
         <div className="form-check form-switch">
           <input
             className="form-check-input"
@@ -40,8 +43,15 @@ export default function App() {
         </p>
       </div>
       <p className="mb-4">Seamless Crypto Transactions at Your Fingertips</p>
-      <ConnectWallet setEthersProvider={setEthersProvider} setAccount={setAccount} setWallet={setWallet} />
+      <ConnectWallet
+        setEthersProvider={setEthersProvider}
+        setAccount={setAccount}
+        setWallet={setWallet}
+        setTransactionStatus={setTransactionStatus} // Pass setTransactionStatus to ConnectWallet
+        setTransactionReceipt={setTransactionReceipt} // Pass setTransactionReceipt to ConnectWallet
+      />
       <DisplayWalletInfo account={account} wallet={wallet} />
+      <TransactionStatus status={transactionStatus} receipt={transactionReceipt} /> {/* Add TransactionStatus component */}
     </div>
   );
 }
