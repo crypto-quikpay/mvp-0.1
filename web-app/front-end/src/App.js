@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ConnectWallet from './ConnectWallet';
-import DisplayWalletInfo from './DisplayWalletInfo';
-import SendTokens from './SendTokens';
-import SwapTokens from './SwapTokens';
-import TransactionStatus from './TransactionStatus';
+import ConnectWallet from './components/ConnectWallet';
+import DisplayWalletInfo from './components/DisplayWalletInfo';
+import SendTokens from './components/SendTokens';
+import SwapTokens from './components/SwapTokens';
+import TransactionStatus from './components/TransactionStatus';
 
 export default function App() {
   const [ethersProvider, setEthersProvider] = useState(null);
